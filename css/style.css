@@ -4,6 +4,84 @@
     box-sizing: border-box;
 }
 
-p {
-    color: red;
+/* font */
+@font-face {
+    font-family: "shell_crabs";
+    src: url("../fonts/ShellCrabs.otf");
+}
+/* variabili */
+:root {
+    --header-background: #48b3b394;
+    --main-background: #48b3b363;  /*#48b3b363; #247aa39c; */
+    --footer-background: cornflowerblue;
+}
+
+
+#app {
+    height: 100vh;
+}
+
+/* HEADER */
+header {
+    height: 100px;
+    background-color: var(--header-background);
+}
+
+.container-header {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* HEADER LEFT */
+.game-name {
+    display: flex;
+    gap: 10px;
+}
+.game-name .logo {
+    width: 50px;
+    display: flex;
+    align-items: center;
+}
+.game-name .logo img {
+    width: 100%;
+}
+
+.title-game {
+    font-size: 45px;
+    font-family: "shell_crabs";
+}
+
+/* HEADER RIGHT */
+.set-difficulty {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+main {
+    height: calc(100% - (100px + 50px));
+    background-color: var(--main-background)
+}
+
+/* FOOTER */
+footer {
+    height: 50px;
+    background-color: var(--footer-background);
+}
+.footer-container {
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+.footer-container a {
+    font-family: "shell_crabs";
 }
