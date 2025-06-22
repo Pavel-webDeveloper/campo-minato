@@ -37,9 +37,10 @@ function randomNumber(min, max) {
 // VARIABILI GLOBALI
 let arrayBombe = [];
 let totBomb = 16;
+let numeriRandom;
 
 // CREO IL SETUP PER IL GIOCO DATO DALL'UTENTE
-function stampaGriglia(){
+function valoriGioco(){
     arrayBombe = [];
     
     const app = document.getElementById("app");
@@ -67,18 +68,18 @@ function stampaGriglia(){
         let casualBomb = randomNumber(1, totBox);
         if(!arrayBombe.includes(casualBomb)){
             arrayBombe.push(casualBomb);
+            console.log("bombe", arrayBombe);
+            
         }
     }
     // console.log(arrayBombe);
-    
-
 // chiamo la funzione genera caselle passandogli come parametro il tot delle caselle
-    generaCaselle(totBox);
+    generaGriglia(totBox);
 }
 
 
-// FUNZIONE CHE GENERA LE CASELLE
-function generaCaselle(totaleCaselle){
+// FUNZIONE CHE GENERA L
+function generaGriglia(totaleCaselle){
 
     let griglia = document.getElementById("griglia");
     griglia.innerHTML = "";
@@ -95,7 +96,6 @@ function generaCaselle(totaleCaselle){
 
 
 // crea casella prova
-
     // for(let i = 1; i <= totaleCaselle; i++){
 
     //     let box = document.createElement("div");
@@ -107,7 +107,7 @@ function generaCaselle(totaleCaselle){
     // }
 
 // crea casella con numero random
-    let numeriRandom = []; //array dei numeri random
+    numeriRandom = []; //array dei numeri random
     
     // ciclo fino a che numeriRandom.length è uguale al totaleCaselle
     while( numeriRandom.length < totaleCaselle){
@@ -132,6 +132,9 @@ function generaCaselle(totaleCaselle){
     
     
     griglia.append(rigaGriglia); 
+    // console.log("numeri random", numeriRandom);
+    
+   
     
 }
 
@@ -146,14 +149,48 @@ function generaBox(numRand, boxPerRiga){
     return box;
 }
 
-
+// LOGICA DEL GIOCO
 function coloraBox() {
-    console.log(this,"this");
-    this.style.backgroundColor = "blue";
+    // console.log(this.innerText,"this");
     this.removeEventListener("click", coloraBox);
-    this.style.cursor = "not-allowed";
-    // console.log(arrayBombe);
+
+
+    // controllo se nell'array delle bombe c'è il numero di questa casella.. Game Over
+    if(arrayBombe.includes(parseInt(this.innerText))){
+        // this.style.backgroundColor = "red";
+        // alert("Game Over");
+        gameOver();
+    } else {
+        this.style.backgroundColor = "blue";
+        this.style.cursor = "not-allowed";     
+    }
+    
+
+
+    // console.log(arrayBombe.includes(parseInt(this.innerText)));
+}
+function gameOver() {
+    // prendo tutti i box dal html
+    const boxList = document.querySelectorAll(".box");
+
+    // ciclo su l'array delle bombe
+    for(let b = 0; b < arrayBombe.length; b++){    
+        const bombValue = arrayBombe[b];
+        // Cerca nella griglia il box col numero-bomba
+        for (let i = 0; i < boxList.length; i++) {
+            if (parseInt(boxList[i].innerText) === bombValue) {
+                boxList[i].style.backgroundColor = "red";
+                boxList[i].style.cursor = "not-allowed";
+            }
+        }
+    }
+    // console.log(arrayBombe, "arrayBombe");
+    // console.log(numeriRandom, "numeri random");
+    
+    
+    
 }
 
 
-const gioca = document.getElementById("play").addEventListener("click", stampaGriglia);
+
+const gioca = document.getElementById("play").addEventListener("click", valoriGioco);
