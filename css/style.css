@@ -69,10 +69,15 @@ main {
     display: flex;
     justify-content: center;
     align-items:center;
+    flex-direction: column;
 }
 #griglia {
     width: 650px;
     height: 650px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .messaggio-iniziale {
     display: flex;
@@ -125,7 +130,12 @@ footer {
     display: flex;
     height: 100%;
     align-items: center;
+    justify-content: space-between;
 }
 .footer-container a {
     font-family: "shell_crabs";
+}
+
+.footer-container h5 {
+    color: white;
 }

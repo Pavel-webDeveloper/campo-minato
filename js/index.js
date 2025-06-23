@@ -38,14 +38,21 @@ function randomNumber(min, max) {
 let arrayBombe = [];
 let totBomb = 16;
 let numeriRandom;
+let punteggio;
+let tentativi;
 
 // CREO IL SETUP PER IL GIOCO DATO DALL'UTENTE
 function valoriGioco(){
     arrayBombe = [];
+    punteggio = 0;
+    tentativi = 0;
     
     const app = document.getElementById("app");
     let gameDifficulty = document.getElementById("difficulty").value;
     // console.log(gameDifficulty);
+
+    let messaggioFinale = document.getElementById("messaggio-finale");
+    messaggioFinale.innerText = "";
 
     // gestisco il numero di caselle totali in base alla difficoltà
     let totBox = "";
@@ -127,15 +134,10 @@ function generaGriglia(totaleCaselle){
         let myBox = generaBox(numRandom, casellePerRiga);
         rigaGriglia.append(myBox);
         }
-
     }
-    
     
     griglia.append(rigaGriglia); 
     // console.log("numeri random", numeriRandom);
-    
-   
-    
 }
 
 function generaBox(numRand, boxPerRiga){
@@ -151,7 +153,7 @@ function generaBox(numRand, boxPerRiga){
 
 // LOGICA DEL GIOCO
 function coloraBox() {
-    // console.log(this.innerText,"this");
+    // console.log(this,"this");
     this.removeEventListener("click", coloraBox);
 
 
@@ -159,38 +161,74 @@ function coloraBox() {
     if(arrayBombe.includes(parseInt(this.innerText))){
         // this.style.backgroundColor = "red";
         // alert("Game Over");
-        gameOver();
-    } else {
+        gameOver(false);
+    }
+    else if( !arrayBombe.includes(parseInt(this.innerText)) && this.innerText != ""){
+        punteggio += 100;
+        tentativi++;
         this.style.backgroundColor = "blue";
-        this.style.cursor = "not-allowed";     
+        this.style.cursor = "not-allowed";  
+            if( tentativi == numeriRandom.length - arrayBombe.length){
+                gameOver(true);
+                // console.log("tentativi",numeriRandom.length - arrayBombe.length);
+            }
     }
     
-
-
     // console.log(arrayBombe.includes(parseInt(this.innerText)));
 }
-function gameOver() {
+function gameOver(vittoria) {
+    let messaggioFinale = document.getElementById("messaggio-finale");
+        messaggioFinale.classList.remove("d-none");
     // prendo tutti i box dal html
     const boxList = document.querySelectorAll(".box");
 
-    // ciclo su l'array delle bombe
-    for(let b = 0; b < arrayBombe.length; b++){    
-        const bombValue = arrayBombe[b];
-        // Cerca nella griglia il box col numero-bomba
-        for (let i = 0; i < boxList.length; i++) {
-            if (parseInt(boxList[i].innerText) === bombValue) {
-                boxList[i].style.backgroundColor = "red";
-                boxList[i].style.cursor = "not-allowed";
+    if(vittoria == false){
+        // ciclo su l'array delle bombe
+        for(let b = 0; b < arrayBombe.length; b++){    
+            const bombValue = arrayBombe[b];
+            // Cerca nella griglia il box col numero-bomba
+            for (let i = 0; i < boxList.length; i++) {
+                boxList[i].removeEventListener("click", coloraBox);
+                if (parseInt(boxList[i].innerText) === bombValue) {
+                    boxList[i].style.backgroundColor = "red";
+                    boxList[i].style.cursor = "not-allowed";
+                    boxList[i].innerHTML = `
+                    <img src="img/logo-campo-minato.png" alt="" style= width:100%;>`
+                }
             }
         }
+        // console.log(arrayBombe, "arrayBombe");
+        // console.log(numeriRandom, "numeri random");
+        console.log("punteggio", punteggio);
+        console.log("tentativi", tentativi);
+        
+        messaggioFinale.innerText = `Score: ${punteggio} punti.. Hai trovato ${tentativi} caselle senza Bombe.`
     }
-    // console.log(arrayBombe, "arrayBombe");
-    // console.log(numeriRandom, "numeri random");
+    else {
+        messaggioFinale.innerText = `Score: ${punteggio} punti.. Congratulazioni hai trovato tutte le caselle senza Bombe.`
+        for (let i = 0; i < boxList.length; i++) {
+            boxList[i].removeEventListener("click", coloraBox);
+        }
+    }
+    let main = document.getElementsByTagName("main")[0];
+    console.log(main, "main");
     
-    
+    let rigioca = document.createElement("button");
+    rigioca.setAttribute("class", "btn btn-secondary ms-1 mt-4");
+    // rigioca.setAttribute("class", "btn btn-secondary ms-1");
+    rigioca.innerText = "Rigioca";
+    main.append(rigioca);
+    rigioca.addEventListener("click", function(){
+        valoriGioco();
+        rigioca.setAttribute("class", "d-none");
+    });
+    let gioca = document.getElementById("play").addEventListener("click", function(){
+        valoriGioco();
+        rigioca.setAttribute("class", "d-none");
+    })
     
 }
 
 
 
-const gioca = document.getElementById("play").addEventListener("click", valoriGioco);
+let gioca = document.getElementById("play").addEventListener("click", valoriGioco);
